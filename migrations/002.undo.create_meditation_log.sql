@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS meditation_log;

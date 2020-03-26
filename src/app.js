@@ -4,8 +4,20 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const {NODE_ENV} = require('./config');
+const userAuth = require('./auth/users-auth');
+const medTrackerRouter = require('./medtracker/medtracker');
 
 const app = express();
+const whiteList = ['http://localhost:3000/']
+let corsOption = {
+    origin: function(origin, callback) {
+        if(whiteList.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -13,7 +25,10 @@ const morganOption = (NODE_ENV === 'production')
 
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOption));
+
+app.use('/api/auth', userAuth) // post req for login and sign up
+app.use('/api/medtracker', medTrackerRouter) // posts req to keep track of meditation times 
 
 app.get('/', (req, res) => {
     res.send('Hello, world!')
@@ -28,6 +43,7 @@ app.use(function errorHandler(error, req, res, next) {
         response = {message: error.message, error}
     }
 
+    console.log(error)
     res.status(500).json(response);
 });
 
