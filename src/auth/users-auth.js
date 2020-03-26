@@ -60,7 +60,6 @@ userAuthRouter
                         const sub = dbUser.email;
                         const payload = {id: dbUser.id};
                         let totalTime = getTotalTime(data);
-                        console.log(totalTime)
                         
                         data.map(log => {
                             log.date_published = moment(log.date_published).format('MMM Do YYYY')
@@ -71,7 +70,6 @@ userAuthRouter
                             medData: latestData,
                             totalTime
                         }
-                        console.log({user})
                         res.send({
                             authToken: UserAuthService.createJwt(sub, payload),
                             user
