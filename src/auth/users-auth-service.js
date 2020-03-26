@@ -14,7 +14,6 @@ const UserAuthService = {
     getData(knex, id) {
         return knex.select('*').from('meditation_log')
         .orderBy('date_published', 'desc')
-        // .limit(7)
         .where('id', id)
     },
 

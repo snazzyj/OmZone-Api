@@ -49,7 +49,7 @@ userAuthRouter
                 .then(compareMatch => {
                     if(!compareMatch) {
                         return res.status(400).json({
-                            errror: 'Incorrect email or password'
+                            error: 'Incorrect email or password'
                         })
                     }
                     UserAuthService.getData(
@@ -58,7 +58,7 @@ userAuthRouter
                     )
                     .then(data => {
                         const sub = dbUser.email;
-                        const payload = {id: dbUser.id};
+                        const payload = {user_id: dbUser.id};
                         let totalTime = getTotalTime(data);
                         
                         data.map(log => {

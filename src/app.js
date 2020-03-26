@@ -9,15 +9,15 @@ const medTrackerRouter = require('./medtracker/medtracker');
 
 const app = express();
 const whiteList = ['http://localhost:3000/']
-let corsOption = {
-    origin: function(origin, callback) {
-        if(whiteList.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    }
-}
+// let corsOption = {
+//     origin: function(origin, callback) {
+//         if(whiteList.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error('Not allowed by CORS'))
+//         }
+//     }
+// }
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -25,7 +25,8 @@ const morganOption = (NODE_ENV === 'production')
 
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(cors(corsOption));
+// app.use(cors(corsOption));
+app.use(cors())
 
 app.use('/api/auth', userAuth) // post req for login and sign up
 app.use('/api/medtracker', medTrackerRouter) // posts req to keep track of meditation times 
