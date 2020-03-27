@@ -1,6 +1,7 @@
 const express = require('express');
 const moment = require('moment')
 const UserAuthService = require('./users-auth-service');
+const {TEST_DATABASE_URL} = require('../config')
 
 const userAuthRouter = express.Router();
 const jsonParser = express.json();
@@ -25,7 +26,8 @@ userAuthRouter
     .post(jsonParser, (req, res, next) => {
         const {email, password} = req.body;
         const loginUser = {email, password};
-
+        console.log({loginUser})
+        console.log({TEST_DATABASE_URL})
         for (const [key, value] of Object.entries(loginUser)) {
             if (value == null) {
               return res.status(400).json({

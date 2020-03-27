@@ -3,7 +3,8 @@ const knex = require('knex');
 const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const { makeUsersArray } = require('./user-fixtures');
-const TEST_DB_URL = "postgresql://Alex:1@localhost/omzone-api"
+const UserAuthService = require('../src/auth/users-auth-service');
+const TEST_DATABASE_URL = "postgresql://Alex:1@localhost/omzone-api";
 
 describe('User Auth Endpoints', function () {
 
@@ -11,7 +12,7 @@ describe('User Auth Endpoints', function () {
     before('make knex instance', () => {
         db = knex({
             client: 'pg',
-            connection: TEST_DB_URL
+            connection: TEST_DATABASE_URL
         })
         app.set('db', db)
     });
@@ -25,34 +26,24 @@ describe('User Auth Endpoints', function () {
         context('Given there are users in the database', () => {
             const testUsers = makeUsersArray();
             const testUser = testUsers[0]
-            const userValidCreds = {
-                email: testUser.email,
-                password: testUser.password
-            }
-            const subject = testUser.email;
-            const payload = {user_id: testUser.id}
-            const user = {
-                id: testUser.id,
-                medData: [],
-                totalTime: 0
-            }
+            let hashedUsers = []
 
-            const expectedToken = jwt.sign(
-                payload,
-                process.env.JWT_SECRET,
-                {
-                    subject,
-                    algorithm: 'HS256'
-                }
-            )
+            before('hash passwords', () => {
+                testUsers.reduce( function(promise, user){
 
-            console.log(userValidCreds)
-            console.log(user)
-            console.log(expectedToken)
-            console.log(process.env.JWT_SECRET)
-
+                    return promise.then( () => {
+                        return UserAuthService.hashPassword(user.password)
+                            .then(hashedPw => {
+                                hashedUsers.push({...user, password: hashedPw})
+                            })
+                    })
+                }, Promise.resolve() )
+            })
             beforeEach('insert users', () => {
-                return db.into('users').insert(testUsers)
+                return db.into('users').insert(hashedUsers)
+            })
+            beforeEach('verify users', () => {
+                return db.select('*').from('users').then(console.log)
             })
 
             const requiredFields = ['email', 'password'];
@@ -116,6 +107,9 @@ describe('User Auth Endpoints', function () {
                 return supertest(app)
                     .post('/api/auth/login')
                     .send(userValidCreds)
+                    .expect(res => {
+                        console.log(res.body)
+                    })
                     .expect(200, {
                         authToken: expectedToken,
                         user

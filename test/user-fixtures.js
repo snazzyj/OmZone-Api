@@ -14,25 +14,6 @@ function makeUsersArray() {
         }
     ]
 }
-
-function testLog() {
-    return [
-        {
-            id: 1,
-            minutes: 10,
-        },
-        {
-            id: 1,
-            minutes: 15,
-        },
-        {
-            id: 1,
-            minutes: 15,
-        },
-    ]
-}
-
 module.exports = {
     makeUsersArray,
-    testLog
 }
