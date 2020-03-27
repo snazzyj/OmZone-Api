@@ -42,9 +42,6 @@ describe('User Auth Endpoints', function () {
             beforeEach('insert users', () => {
                 return db.into('users').insert(hashedUsers)
             })
-            beforeEach('verify users', () => {
-                return db.select('*').from('users').then(console.log)
-            })
 
             const requiredFields = ['email', 'password'];
             requiredFields.forEach(field => {
@@ -107,9 +104,6 @@ describe('User Auth Endpoints', function () {
                 return supertest(app)
                     .post('/api/auth/login')
                     .send(userValidCreds)
-                    .expect(res => {
-                        console.log(res.body)
-                    })
                     .expect(200, {
                         authToken: expectedToken,
                         user
