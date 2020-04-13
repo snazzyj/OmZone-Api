@@ -2,7 +2,7 @@ const {expect} = require('chai');
 const knex = require('knex');
 const app = require('../src/app');
 const { makeUsersArray } = require('./user-fixtures');
-const TEST_DB_URL = "postgresql://Alex:1@localhost/omzone-api"
+const TEST_DB_URL = "postgresql://Alex:1@localhost/omzone_test"
 
 describe('Medtracker Endpoint', function () {
     let db;

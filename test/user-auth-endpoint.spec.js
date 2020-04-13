@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const { makeUsersArray } = require('./user-fixtures');
 const UserAuthService = require('../src/auth/users-auth-service');
-const TEST_DATABASE_URL = "postgresql://Alex:1@localhost/omzone-api";
+const TEST_DATABASE_URL = "postgresql://Alex:1@localhost/omzone_test";
 
 describe('User Auth Endpoints', function () {
 
@@ -29,15 +29,15 @@ describe('User Auth Endpoints', function () {
             let hashedUsers = []
 
             before('hash passwords', () => {
-                testUsers.reduce( function(promise, user){
+                testUsers.reduce(function (promise, user) {
 
-                    return promise.then( () => {
+                    return promise.then(() => {
                         return UserAuthService.hashPassword(user.password)
                             .then(hashedPw => {
-                                hashedUsers.push({...user, password: hashedPw})
+                                hashedUsers.push({ ...user, password: hashedPw })
                             })
                     })
-                }, Promise.resolve() )
+                }, Promise.resolve())
             })
             beforeEach('insert users', () => {
                 return db.into('users').insert(hashedUsers)
@@ -68,7 +68,9 @@ describe('User Auth Endpoints', function () {
                 return supertest(app)
                     .post('/api/auth/login/')
                     .send(invalidUserEmail)
-                    .expect(400, { error: `Incorrect email or password` })
+                    .expect(400, {
+                        error: { message: `Incorrect email or password` }
+                    })
             })
             it(`responds with 400 'invalid email or password' when bad password`, () => {
                 const invalidUserPass = { email: testUser.email, password: 'existy' };
@@ -76,7 +78,9 @@ describe('User Auth Endpoints', function () {
                 return supertest(app)
                     .post('/api/auth/login/')
                     .send(invalidUserPass)
-                    .expect(400, { error: `Incorrect email or password` })
+                    .expect(400, {
+                        error: { message: `Incorrect email or password` }
+                    })
             })
 
             it(`responds 200 and JWT auth token using secret when valid creds`, () => {
@@ -85,7 +89,7 @@ describe('User Auth Endpoints', function () {
                     password: testUser.password
                 }
                 const subject = testUser.email;
-                const payload = {user_id: testUser.id}
+                const payload = { user_id: testUser.id }
                 const user = {
                     id: testUser.id,
                     medData: [],
@@ -100,7 +104,7 @@ describe('User Auth Endpoints', function () {
                         algorithm: 'HS256'
                     }
                 )
-                
+
                 return supertest(app)
                     .post('/api/auth/login')
                     .send(userValidCreds)
