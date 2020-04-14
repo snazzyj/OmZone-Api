@@ -1,26 +1,93 @@
-# Express Boilerplate!
+# Om Zone API
 
-This is a boilerplate project used for starting new projects!
+# Demo
+### [Live](https://omzone.snazzyj.now.sh/)
+### [Om Zone Repo](https://github.com/snazzyj/OmZone)
+### Demo Account:
+### Email: test@gmail.com
+### Password: Password123
 
-## Set up
+# Summary
+This API is very basic to the point. It allows user to sign up and login. When the user is done meditating for that session, it will get posted and saved.
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+# Routes
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+## Users
 
-## Scripts
+  POST Req for Login
+  
+  URL: `https://pure-anchorage-91926.herokuapp.com/api/auth/login`
+  
+  Input: {email: "test@gmail.com", password: "Password123"}
+  
+  Response: `{ 
+        "user": {
+          "id": 1,
+          "medData": [
+            {
+                "id": 1,
+                "date_published": "Apr 13th 2020",
+                "minutes": 2
+            },
+            {
+                "id": 1,
+                "date_published": "Apr 13th 2020",
+                "minutes": 2
+            },
+            {
+                "id": 1,
+                "date_published": "Apr 13th 2020",
+                "minutes": 15
+            },
+            {
+                "id": 1,
+                "date_published": "Apr 13th 2020",
+                "minutes": 10
+            },
+            {
+                "id": 1,
+                "date_published": "Apr 11th 2020",
+                "minutes": 1
+            },
+            {
+                "id": 1,
+                "date_published": "Apr 11th 2020",
+                "minutes": 1
+            },
+            {
+                "id": 1,
+                "date_published": "Apr 10th 2020",
+                "minutes": 1
+            }
+        ],
+        "totalTime": 105
+    }
+   }`
+  
+  POST Req for Signing Up
+  
+  URL: `https://pure-anchorage-91926.herokuapp.com/api/auth/register`
+  
+  Input: {name: "Foo Bar", email: "foobar@foo.com", password: "BarBar"}
+  
+  Response: `{
+    "name": "Foo Bar",
+    "email": "foobar@foo.com",
+    "password": "$2a$12$DpAxwPy5YVJWugcn9J9bfOuXJDzmEFzQlv92u3PllQWDZ3t9nuZF6"
+}`
 
-Start the application `npm start`
-
-Start nodemon for the application `npm run dev`
-
-Run the tests `npm test`
-
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+##  Med Tracker 
+  
+  POST Req will post new meditation log
+  
+  URL: `https://pure-anchorage-91926.herokuapp.com/api/medtracker`
+  
+  Input: `{id: 1, minutes: 15}`
+  
+  Response: `{
+    "id": 1,
+    "date_published": "Apr 14th 2020",
+    "minutes": 15
+}`
+  
+  
