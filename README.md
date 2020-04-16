@@ -89,5 +89,11 @@ This API is very basic to the point. It allows user to sign up and login. When t
     "date_published": "Apr 14th 2020",
     "minutes": 15
 }`
-  
+
+
+# Tech
+1. Postgres
+2. Express
+3. NodeJs
+
   
