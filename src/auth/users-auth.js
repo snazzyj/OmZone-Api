@@ -12,6 +12,7 @@ const serializeUser = user => ({
     password: user.password
 })
 
+//simple loop to get sum
 const getTotalTime = (array) => {
     let sum = 0;
     for(let i = 0; i < array.length; i++) {
@@ -26,15 +27,8 @@ userAuthRouter
     .post(jsonParser, (req, res, next) => {
         const {email, password} = req.body;
         const loginUser = {email, password};
-    
-        for (const [key, value] of Object.entries(loginUser)) {
-            if (value == null) {
-              return res.status(400).json({
-                error: { message: `Missing '${key}' in request body` }
-              })
-            }
-        }
 
+        //Checks to see if the user exists within the database
         UserAuthService.getUserWithEmail(
             req.app.get('db'),
             loginUser.email
@@ -46,6 +40,7 @@ userAuthRouter
                 })
             }
 
+            //If user is found, compare the passwords
             return UserAuthService.comparePasswords(loginUser.password, dbUser.password)
                 .then(compareMatch => {
                     if(!compareMatch) {
@@ -53,6 +48,7 @@ userAuthRouter
                             error: { message: 'Incorrect email or password' }
                         })
                     }
+                    //If the passwords match, grab the user data
                     UserAuthService.getData(
                         req.app.get('db'),
                         dbUser.id
@@ -71,6 +67,7 @@ userAuthRouter
                             medData: latestData,
                             totalTime
                         }
+                        //sends out the id, meditation data (medData) which is an array of objects, along with a total time
                         res.send({
                             authToken: UserAuthService.createJwt(sub, payload),
                             user

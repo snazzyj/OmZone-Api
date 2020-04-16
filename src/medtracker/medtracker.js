@@ -5,8 +5,6 @@ const MedTrackerService = require('./medtracker-service');
 const medTrackerRouter = express.Router();
 const jsonParser = express.json();
 
-//post req
-
 medTrackerRouter
     .route('/')
     .post(jsonParser, (req, res, next) => {
@@ -15,6 +13,7 @@ medTrackerRouter
             id,
             minutes
         }
+        //Inserts the new log and then converting the result and sending it back proper formatting
         MedTrackerService.insertNewLog(
             req.app.get('db'),
             newLog
